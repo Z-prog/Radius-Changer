@@ -1,0 +1,18 @@
+<div>
+  <span id="radiusNumbers"></span>
+</div>
+
+<script>
+  window.onmessage = async (event) => {
+    const message = event.data.pluginMessage;
+    document.getElementById("radiusNumbers").innerHTML = message.RadiusValues;
+    console.log(message);
+  };
+</script>
+
+<style>
+  span {
+    font-family: "Arial";
+    font-weight: 900;
+  }
+</style>

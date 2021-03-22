@@ -1,0 +1,7 @@
+{
+  "name": "Radius Changer",
+  "id": "955777753070669414",
+  "api": "1.0.0",
+  "main": "code.js",
+  "ui": "ui.html"
+}

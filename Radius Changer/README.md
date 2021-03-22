@@ -1,3 +1,8 @@
+NEW-------------
+Open Figma> manage plugin> create new > choose option 3 > save it and replace with the code set above
+
+
+OLD-------------
 Below are the steps to get your plugin running. You can also find instructions at:
 
   https://www.figma.com/plugin-docs/setup/

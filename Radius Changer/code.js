@@ -14,26 +14,37 @@ const sendRadiusInfo = RadiusValues => {
   }) 
 }
 
-//find and listen for RECTANGLE nodes
-figma.on('selectionchange', () => {
-  // If nothing is selected, return
-  if (!figma.currentPage.selection.length) return
+const getRectangles = selection => {
+  const RECT_TYPE = "RECTANGLE"
 
-  // Constants for type/s & radius
-  const RECT = "RECTANGLE"
+  return selection 
+    .filter(node => node.type === RECT_TYPE)
+}
+
+const setRectangleRadius = rectangles => {
+  if (!rectangles.length) return
   const RADIUS = 24
 
-  const selection = figma.currentPage.selection
-    .filter(node => node.type === RECT)
+  rectangles.forEach(rect => {
+    rect.cornerRadius = RADIUS
+  })
+}
 
-  if (selection.length) {
-    selection.forEach(rect => {
-      rect.cornerRadius = RADIUS
-    })
+//find and listen for RECTANGLE nodes
+figma.on('selectionchange', () => {
+  const currentSelection = figma.currentPage.selection
+  if (!currentSelection.length) return
+
+  // Find rectangles
+  const rectangles = getRectangles(currentSelection)
+
+  // Mutate rectangles
+  setRectangleRadius(rectangles)
+
+  if (rectangles.length) {
+    const radiusValues = rectangles.map(node => node.cornerRadius)
+    //passes radius values to a function that sends a message to fron ui 
+    sendRadiusInfo(radiusValues)
   }
-
-  const radiusValues = selection.map(node => node.cornerRadius)
-  //passes radius values to a function that sends a message to fron ui 
-  sendRadiusInfo(radiusValues)
 })
 

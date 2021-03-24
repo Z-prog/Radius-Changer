@@ -6,34 +6,45 @@
 
 figma.showUI(__html__)
 
-
 // send Message to UI 
-function sendRadiusInfo(RadiusValues){
+const sendRadiusInfo = RadiusValues => {
   figma.ui.postMessage({
     //type: 'selectionchange',
     RadiusValues,
   }) 
+}
 
- }
+const getRectangles = selection => {
+  const RECT_TYPE = "RECTANGLE"
+
+  return selection 
+    .filter(node => node.type === RECT_TYPE)
+}
+
+const setRectangleRadius = rectangles => {
+  if (!rectangles.length) return
+  const RADIUS = 24
+
+  rectangles.forEach(rect => {
+    rect.cornerRadius = RADIUS
+  })
+}
 
 //find and listen for RECTANGLE nodes
 figma.on('selectionchange', () => {
-  //Select
-  if (figma.currentPage.selection.length >= 1){
-    const selection = figma.currentPage.selection.filter(
-      node => node.type === "RECTANGLE")
-      
-      //check selected radius
-      console.log(figma.currentPage.selection[0].cornerRadius)
-      //check what type of object it is, rect, circle etc 
-      console.log(figma.currentPage.selection)
-    //find all radius values
-    const RadiusValues = selection.map(node => node.cornerRadius)
+  const currentSelection = figma.currentPage.selection
+  if (!currentSelection.length) return
+
+  // Find rectangles
+  const rectangles = getRectangles(currentSelection)
+
+  // Mutate rectangles
+  setRectangleRadius(rectangles)
+
+  if (rectangles.length) {
+    const radiusValues = rectangles.map(node => node.cornerRadius)
     //passes radius values to a function that sends a message to fron ui 
-    sendRadiusInfo(RadiusValues)
-      
-  } 
+    sendRadiusInfo(radiusValues)
+  }
 })
-
-
 
